@@ -2,6 +2,7 @@ from machine import Pin, I2C
 import time
 from ssd1306 import SSD1306_I2C
 from bmp280 import *
+from imu import MPU6050
 
 # Setup Built-in Led Pin
 led = Pin("LED",Pin.OUT)
@@ -43,6 +44,12 @@ barometer.iir = BMP280_IIR_FILTER_2
 barometer.power_mode = BMP280_POWER_NORMAL
 barometer.oversample = BMP280_OS_HIGH
 
+# Setup IMU
+imu = MPU6050(i2cBus)
+imu.filter_range = 5
+imu.accel_range = 2
+imu.gyro_range = 1
+
 
 initBlink(10)
 display.powerOn()
@@ -51,7 +58,7 @@ display.show()
 time.sleep(0.5)
 display.text("Starting up...",0,8);
 display.show()
-time.sleep(1)
+imu.calibrate(100)
 display.fill(0)
 display.show()
 
